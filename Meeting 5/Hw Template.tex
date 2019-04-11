@@ -1,0 +1,325 @@
+\documentclass[letterpaper,10pt]{article}
+\usepackage[top=2cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
+\usepackage{amsmath, amssymb, amsthm,graphicx,enumitem}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\lhead{Week of April 1}
+\chead{Scientific Computing Homework 5}
+\rhead{Justin Hood}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newtheorem{lem}{Lemma}
+
+\begin{document}
+\begin{description}
+\item[6.1]\hfill \\
+\begin{proof}
+Let $P$ be an orthogonal projector, and consider the value of $I-2P$. First, consider,
+\begin{align*}
+(I-2P)^*&=-2P*+I* && \text{By Theorem 6.1, } P^*=P\\
+&=I-2P
+\end{align*}
+So, we see that $(I-2P)^*=(I-2P)$ so it is a projector. Next, we consider,
+\begin{align*}
+(I-2P)(I-2P)^*&=I^2-4IP+4P^2 && \text{By definition of a projector, } P^2=P\\
+&=I-4P+4P\\
+&=I
+\end{align*}
+Thus, we see that the quantity $(I-2P)$ is unitary because its complement is itself and its inverse.
+\end{proof}
+We now consider the geometric meaning of $(I-2P)$. We know that the operator $P$ projects a vector $v$ onto the basis of $P$. We also know that $(I-P)v$ is orthogonal to $Pv$, an almost mirrored projection of $v$ about $v$. If we consider the flashlight analogy, $Pv$ is a light being shined towards the basis of $P$. Then, mirroring the light position about $v$, $(I-P)v$ projects $v$ in the orthogonal direction. As such, we know that $(I-2P)$ will project it in the orthoginal direction, but twice as far.
+\item[6.3]\hfill \\
+Consider, $A\in \C^{m\times n}$ with $m\geq n$. First,\\
+Consider $A^*A$ to be singular. Then, by definition of singularity, we have a vector $x\neq 0$ such that $A^*Ax=0$. Thus, we see that $x^*A^*Ax=0$ as well. Because of this, we see that $A^*A$ is not full rank as the determinant is zero.\\
+Second,\\
+Consdider $A^*A$ as not full rank. Then, $\exists x\neq 0$ such that $Ax=0$. Then, we may also conclude $A^*Ax=0$. Because $x\neq 0$, we see that the matrix $A^*A$ must be singular. So, we have shown that the contrapositive is true in both cases.
+\item[6.4]\hfill \\
+We consider the matrices,
+\[A=\begin{bmatrix}
+1 & 0\\0 & 1\\1 & 0
+\end{bmatrix},\ B=\begin{bmatrix}
+1 & 2\\0 & 1\\1 & 0
+\end{bmatrix} \]
+From the text, we know that for a matrix $M$, the associated projection matrix is,
+\[P=M(M^*M)^{-1}M^*\]
+So, we compute as follows,
+\begin{enumerate}
+\item Matrix $A$,
+\begin{enumerate}
+\item We compute,
+\[(A^*A)^{-1}=\begin{bmatrix}
+\frac{1}{2} & 0\\ 0 & 1
+\end{bmatrix} \]
+Then,
+\[P_A=A(A^*A)^{-1}A^*=\begin{bmatrix}
+1 & 0\\0 & 1\\1 & 0
+\end{bmatrix}\begin{bmatrix}
+\frac{1}{2} & 0\\ 0 & 1
+\end{bmatrix}\begin{bmatrix}
+1 & 0 & 1\\0 & 1 & 0
+\end{bmatrix}=\begin{bmatrix}
+\frac{1}{2} & 0 & \frac{1}{2}\\0 & 1 & 0\\\frac{1}{2} & 0 & \frac{1}{2}
+\end{bmatrix} \]
+\item We then consider,
+\[P_A\begin{bmatrix}
+1\\2\\3
+\end{bmatrix}=\begin{bmatrix}
+\frac{1}{2}+\frac{3}{2}\\2\\\frac{1}{2}+\frac{3}{2}
+\end{bmatrix}=\begin{bmatrix}
+2\\2\\2
+\end{bmatrix} \]
+\end{enumerate}
+\item Matrix $B$,
+\begin{enumerate}
+\item We compute,
+\[(B^*B)^{-1}=\frac{1}{6}\begin{bmatrix}
+5 & -2\\-2 & 2
+\end{bmatrix} \]
+Then,
+\[P_B=B(B^*B)^{-1}B^*=\frac{1}{6}\begin{bmatrix}
+1 & 2\\0 & 1\\1 & 0
+\end{bmatrix}\begin{bmatrix}
+5 & -2\\-2 & 2
+\end{bmatrix}\begin{bmatrix}
+1 & 0 & 1\\2 & 1 & 0
+\end{bmatrix}=\frac{1}{6}\begin{bmatrix}
+5 & 2 & 1\\ 2 & 2 & -2\\ 1 & -2 & 5
+\end{bmatrix} \]
+\item We then consider,
+\[P_B\begin{bmatrix}
+1\\2\\3
+\end{bmatrix}=\begin{bmatrix}
+\frac{5+4+3}{6}\\\frac{2+4-6}{6}\\\frac{1-4+15}{6}
+\end{bmatrix}=\begin{bmatrix}
+2\\0\\2
+\end{bmatrix} \]
+\end{enumerate}
+\end{enumerate}
+\item[6.5]\hfill \\
+We consider $P$ to be a nonzero projector. Let $x$ be a nonzero vector such that $Px=\alpha\neq 0$. Then, by definition of a projector,
+\[P^2x=Px=\alpha\]
+But,
+\[P^2x=P(Px)=P\alpha=\alpha\]
+So, we have shown that $Px=x$. Then, 
+\[\frac{||Px||}{||x||}=1\]
+Because we know that $||Px||\leq ||P||\ ||x||$, we conclude that $||P||\geq 1$. Next, consider $P$ as orthogonal. Then, we know $P^*=P$. Consider the SVD of P, $P=U\Sigma V^*$. Given the nature of this decomposition $UU^*=VV^*=I$. Then,
+\[||P||_2=||P^2||_2=||PP^*||_2=||U\Sigma V^*V\Sigma^* U^*||_2=||U\Sigma \Sigma^* U^*||_2=||\Sigma \Sigma^*||_2=\sigma_1^2\]
+The largest singular value squared. But, $||P||_2=||U\Sigma V^*||_2=||\Sigma||_2=\sigma_1$. So, we have,
+\[\sigma_1^2=\sigma_1=1\]
+Thus, with orthagonality, we have equality to one.
+\item[7.1]\hfill \\
+Using Graham Schmidt, we compute,
+\begin{enumerate}
+\item Matrix A,
+\[A=\begin{bmatrix}
+1 & 0\\0 & 1\\1 & 0
+\end{bmatrix},\ a_1=\begin{bmatrix}
+1\\0\\1
+\end{bmatrix},\ a_2=\begin{bmatrix}
+0\\1\\0
+\end{bmatrix} \]
+Then,
+\begin{align*}
+u_1 &= \begin{bmatrix}
+1\\0\\1
+\end{bmatrix}\\
+e_1 &= \begin{bmatrix}
+1/\sqrt{2}\\0\\1/\sqrt{2}
+\end{bmatrix}\\
+u_2&=a_2-(a_2\cdot e_1)e_1\\
+&=\begin{bmatrix}
+0\\1\\0
+\end{bmatrix}\\
+e_2 &= \begin{bmatrix}
+0\\1\\0
+\end{bmatrix}
+\end{align*}
+Then,
+\[\hat{Q}=\begin{bmatrix}
+1/\sqrt{2} & 0\\
+0 & 1\\
+1/\sqrt{2} & 0
+\end{bmatrix},\ \hat{R}=\begin{bmatrix}
+\sqrt{2} & 0\\
+0 & 1
+\end{bmatrix} \]
+Expanding to the full QR factorization,
+$q_3=q_1\times q_2$,
+\[Q=\begin{bmatrix}
+1/\sqrt{2} & 0 & -1/\sqrt{2}\\
+0 & 1 & 0\\
+1/\sqrt{2} & 0 & 1/\sqrt{2}
+\end{bmatrix},\ R=\begin{bmatrix}
+\sqrt{2} & 0\\
+0 & 1\\
+0 & 0
+\end{bmatrix} \]
+\item Matrix B,
+\[B=\begin{bmatrix}
+1 & 2\\ 0 & 1\\ 1 & 0
+\end{bmatrix},\ b_1=\begin{bmatrix}
+1\\0\\1
+\end{bmatrix},\ b_2=\begin{bmatrix}
+2\\1\\0
+\end{bmatrix} \]
+Then,
+\begin{align*}
+u_1 &= \begin{bmatrix}
+1\\0\\1
+\end{bmatrix}\\
+e_1 &= \begin{bmatrix}
+1/\sqrt{2}\\0\\1/\sqrt{2}
+\end{bmatrix}\\
+u_2&=a_2-(a_2\cdot e_1)e_1\\
+&=\begin{bmatrix}
+1\\1\\-1
+\end{bmatrix}\\
+e_2 &= \begin{bmatrix}
+1/\sqrt{3}\\1/\sqrt{3}\\-1/\sqrt{3}
+\end{bmatrix}
+\end{align*}
+Then,
+\[\hat{Q}=\begin{bmatrix}
+1/\sqrt{2} & 1/\sqrt{3}\\
+0 & 1/\sqrt{3}\\
+1/\sqrt{2} & -1/\sqrt{3}
+\end{bmatrix},\ \hat{R}=\begin{bmatrix}
+\sqrt{2} & \sqrt{2}\\
+0 & \sqrt{3}
+\end{bmatrix} \]
+Expanding to the full QR factorization,
+$q_3=q_1\times q_2$,
+\[Q=\begin{bmatrix}
+1/\sqrt{2} & 1/\sqrt{3} & -1/\sqrt{6}\\
+0 & 1/\sqrt{3} & 2/\sqrt{6}\\
+1/\sqrt{2} & -1/\sqrt{3} & 1/\sqrt{6}
+\end{bmatrix},\ R=\begin{bmatrix}
+\sqrt{2} & \sqrt{2}\\
+0 & \sqrt{3}\\
+0 & 0
+\end{bmatrix} \]
+\end{enumerate}
+\item[7.3]\hfill \\
+We consider a matrix $A,\ m\times m$ with QR factorization $A=QR$. Then,
+\[det(A)=det(Q)det(R)=det(R)=\Pi_{j=1}^m\]
+Then,
+\begin{align*}
+a_j &= \sum_{i=1}^jr_{ij}q_j
+\end{align*}
+So, we may expand,
+\[||a_j||^2_2=\sum_{i=1}^j||r_{ij}q_j||^2_2=\sum_{i=1}^j||r_{ij}||^2_2\geq ||r_{jj}||^2_2\]
+We note that the 2-norm of a larger set of numbers must be greater than or equal to only one number. Taking the product of both sides then,
+\[\Pi_{j=1}^m||a_j||^2_2\geq \Pi_{j=1}^m||r_{jj}||^2_2\]
+From before,
+\[\Pi_{j=1}^m||a_j||^2_2\geq \Pi_{j=1}^m||r_{jj}||^2_2=|det(A)|\]
+As desired. Geometrically, we see that this states that the volume of a rectangular parallelepiped is greater than or equal to the volume of a general parallelepiped with the same side lengths.
+\item[7]\hfill\\
+We consider the Householder matrix $H=I-2\frac{vv^*}{v^*v}$.
+\begin{enumerate}[label=\alph*.]
+\item $Hv=-v$\\
+\begin{proof}
+Let $H=I-2\frac{vv^*}{v^*v}$, and consider,
+\begin{align*}
+Hv &= (I-2\frac{vv^*}{v^*v})v\\
+&= v-2\frac{vv^*v}{v^*v}\\
+&= v-2v\\
+&= -v
+\end{align*}
+\end{proof}
+\item $u\perp v\Rightarrow Hu=u$\\
+\begin{proof}
+Let $H=I-2\frac{vv^*}{v^*v}$, and consider $u\perp v$. Then,
+\begin{align*}
+Hu &= (I-2\frac{vv^*}{v^*v})u\\
+&=u-2\frac{vv^*u}{v^*v}&&\text{Note that }v^*u=0\\
+&=u
+\end{align*}
+\end{proof}
+\item $H(\gamma x)=Hx$ for $\gamma \in \C$.
+\begin{proof}
+Let $H=I-2\frac{vv^*}{v^*v}$, and consider $\gamma \in \C$. Then,
+\begin{align*}
+H(\gamma v) &= (I-2\frac{vv^*}{v^*v})(\gamma v)\\
+&= \gamma v-2\gamma \frac{vv^*v}{v^*v}\\
+&=\gamma v-2\gamma v\\
+^= -\gamma v
+\end{align*}
+Let $y=\gamma v$. We know that $Hy=-y=-\gamma v$ as we desire.
+\end{proof}
+\item $H^* H=H^2=I$.
+\begin{proof}
+Let $H=I-2\frac{vv^*}{v^*v}$ and consider,
+\[H^*=I^*-2\frac{(v^*)^* v^*}{v^*(v^*)^*}=I-2\frac{vv^*}{v^*v}=H\]
+Then,
+\[H^*H=HH=H^2=(I-2\frac{vv^*}{v^*v})(I-2\frac{vv^*}{v^*v})\]
+Solving,
+\begin{align*}
+(I-2\frac{vv^*}{v^*v})(I-2\frac{vv^*}{v^*v})&=I-4\frac{vv^*}{v^*v}+4\frac{vv^*vv^*}{v^*vv^*v}\\
+&=I-4\frac{vv^*}{v^*v}+4\frac{v(v^*v)v^*}{(v^*v)^2}\\
+&=I-4\frac{vv^*}{v^*v}+4\frac{vv^*}{v^*v}\\
+&=I
+\end{align*}
+As desired.
+\end{proof}
+\item $H^{-1}=H$.
+\begin{proof}
+From (d), we have shown $H^*H=HH=I$, which is the same as saying $H$ is its own inverse.
+\end{proof}
+\item We now compute the eigenvalues, determinant and singular values of $H$. First, we note that there are three types of vectors in relation to the Householder matrix.
+\begin{enumerate}
+\item Perpindicular to $v$
+\item Parallel to $v$
+\item Sum of the two.
+\end{enumerate}
+We recall from above, that for a parallel vector, we have $Hv=-v\Rightarrow \lambda=-1$, and for a perpindicular vector, $Hu=u\Rightarrow \lambda=1$. Finally, for a vector that is a function of both, we can write $y=\alpha(v)+\beta(u)$, which has one eigenvalue of $-1$ and the rest as positive ones.\\
+Next, we see that the determinant is the product of the eigenvalues, which is, $-1$.\\
+Finally, we compute the singular values of the matrix as the positive roots of the eigenvalues of $H^*H$. Because $H*H=I$, we see that the only values are $\sigma=1$. 
+\end{enumerate}
+\item[10.2]\hfill \\
+See Jupyter Notebook
+\item[10.3]\hfill \\
+We consider,
+\[Z=\begin{bmatrix}
+1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 7\\ 4 & 2 & 3\\4 & 2 & 2
+\end{bmatrix}\]
+Using our constructed QR code, we arrive at,
+\[Q=\begin{bmatrix}
+-0.10101525 & -0.31617307  &  0.5419969   & -0.68420846  & -0.35767115\\
+-0.40406102  & -0.3533699  &   0.51618752  &  0.32800841  &  0.58122744\\
+-0.70710678  & -0.39056673  & -0.52479065  &  0.00939722  & -0.26826124\\
+-0.40406102  &  0.55795248 &   0.38714064 &   0.36559727 &  -0.49181753\\
+-0.40406102 &   0.55795248  & -0.12044376 &  -0.53899869  &  0.46946506
+\end{bmatrix} \]
+\[R=\begin{bmatrix}
+-9.89949494 &  -9.49543392 &  -9.69746443\\
+0  & -3.29191961 &  -3.01294337\\
+0 & 0  &  1.97011572\\
+0  &  0  &  0\\
+0  &  0 &  0
+\end{bmatrix} \]
+Using Python's built in QR function, we see that we obtain the same results. The major difference between the two is that the integers in $Z$ must be cast as doubles for the calculations in our constructed function, which is slightly more inconvenient than simply typing the integers.
+\item[11.3]\hfill\\
+We consider the function $b=\cos(4t)$ over the interval $[0,1]$. First, we construct the $X$ matrix using the flip and vandermonde commands. We construct the matrix such that,
+\[X=\begin{bmatrix}
+1 & 0 & 0 & \ldots & 0\\
+1 & 0.0204 & 4.16e-4 & \ldots & 2.55766e-19\\
+1 & 0.0408 & 1.66e-3 & \ldots & 5.23e-16\\
+\ldots
+1 & 1 & 1 & \ldots & 1
+\end{bmatrix} \]
+We then consider the matrix equation,
+\begin{align*}
+Xw &=b\\
+Aw &=X^Tb\\
+QRw &= X^tb\\
+Rw &= (XQ)^Tb\\
+w &= R^{-1}(XQ)^Tb
+\end{align*}
+Using this analysis, we solve for the weights in the Jupyter Notebook.\\
+***Note: For the different methods described in this problem, we obtain slightly different values for each of the weights. We see that this is because the high powers of $t$ in our $X$ matrix are around machine epsilon. This results in error that propogates throughout the computation due to its repeated use in the computation of not only $X$, but also the $A,Q,R$ matrices as well.
+\end{description}
+\end{document}
