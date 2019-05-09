@@ -1,0 +1,174 @@
+\documentclass[letterpaper,10pt]{article}
+\usepackage[top=2cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
+\usepackage{amsmath, amssymb, amsthm,graphicx}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\lhead{\today}
+\chead{MSCS 747 Assignment 7}
+\rhead{Justin Hood}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newtheorem{lem}{Lemma}
+
+\begin{document}
+\begin{enumerate}
+\item We consider the method outlined in T\&B for Cholesky Factorization. Using the pseudo code from the text, we implement our version of the factorization. We compute the upper triangular matrix where, $A=R^TR$. As a test, we consider,
+\[A=\begin{bmatrix}
+9 & 0 & -27 & 18\\
+0 & 9 & -9 & -27\\
+-27 & -9 & 99 & -27\\
+18 & -27 & -27 & 121
+\end{bmatrix} \]
+We can easily check that A is positive definite and symmetric. We then apply our factorization method to this matrix and arrive at,
+\[A=R^TR=\begin{bmatrix}
+3 & 0 & 0 & 0\\
+0 & 3 & 0 & 0\\
+-9 & -3 & 3 & 0\\
+6 & -9 & 0 & 2
+\end{bmatrix}\begin{bmatrix}
+3 & 0 & -9 & 6\\
+0 & 3 & -3 & -9\\
+0 & 0 & 3 & 0\\
+0 & 0 & 0 & 2
+\end{bmatrix} \]
+We then see that this is the true decomposition. Using the provided unit test, we see that the minimum error exponent for both our method and the numpy methods are usually identical, and are within $1$ otherwise. We see that this error grows slowly as the dimension of our matrix increases, but still remains fairly close to machine epsilon.
+\item We now consider a tridiagonal matrix constructed from a stencil, [1,-2,1],
+\[A=\begin{bmatrix}
+-2 & 1 & 0 & 0 & \ldots & 0 & 0\\
+1 & -2 & 1 & 0 & \ldots & 0 & 0\\
+0 & 1 & -2 & 1 & \ldots & 0 & 0\\
+\vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots\\
+0 & 0 & 0 & 0 & \ldots & 1 & -2
+\end{bmatrix} \]
+We know from our section on LU factorization that if we can isolate the matrix to be upper or lower triangular, we can solve the matrix equation $Ax=b$ using forwards or backwards solving methods. As such, we consider applying Gaussian elimination to this matrix, augmenting it with our $b$ matrix. In this fashion, we begin by dividing the first row by $-2$. Then, by repeated Gaussian elimination, we see that the off diagonal entries of the augmented $A$ matrix take the form,
+\[A_{i,i+1}=\frac{A_{i,i+1}}{-2-A_{i-1,i}}\]
+and that the $b$ values take the form,
+\[b_{i}=\frac{b_{i}-b_{i-1}}{-2-A_{i-1,i}}\]
+We may then construct our reduced matrix,
+\[A^*=\begin{bmatrix}
+1 & a_1^* & 0 & 0 & \ldots & 0 & 0\\
+0 & 1 & a_2^* & 0 & \ldots & 0 & 0\\
+\vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots\\
+0 & 0 & 0 & 0 & \ldots & 1 & a_{n-1}^*\\
+0 & 0 & 0 & 0 & \ldots & 0 & 1\\
+\end{bmatrix} \]
+We see that this matrix is ready for backwards solving. As such, we may encode this new matrix, and solve for $x$ using backwards substitution. This methodology is implemented in the Jupyter notebook on a matrix $b$ that is randomly constructed.
+\item We consider the matrix $A$ and vector $b$ as described. We then consider the following logic,
+\begin{align*}
+Ax &= b\\
+R^TRx &= b\\
+R^T(Rx) &= b\\
+R^Ty &= b && \text{Solve for y with forward substitution}\\
+Rx &= y && \text{Solve for x with backwards substitution}
+\end{align*}
+We see this implemented in the Jupyter Notebook
+\item Let an $m\times m$ matrix $A$ be written as, $A=\begin{bmatrix}
+A_{11} & A_{12}\\ A_{21} & A_{22}
+\end{bmatrix}$, and assume $A$ is nonsingular. Then, consider the following,
+\begin{align*}
+\begin{bmatrix}
+I & 0\\-A_{21}A_{11}^{-1} & I
+\end{bmatrix}\begin{bmatrix}
+A_{11} & A_{12}\\ A_{21} & A_{22}
+\end{bmatrix} &=\begin{bmatrix}
+IA_{11}+0A_{21} & IA_{12}+0A_{22}\\ -A_{21}A_{11}^{-1}A_{11}+IA_{21} & -A_{21}A_{11}^{-1}A_{12}+IA_{22}
+\end{bmatrix}\\
+&=\begin{bmatrix}
+A_{11} & A_{12}\\0 & A_{22}--A_{21}A_{11}^{-1}A_{12}
+\end{bmatrix}
+\end{align*}
+As desired.\\
+Now, let $A$ have a $LU$ factorization as,
+\[A=\begin{bmatrix}
+A_{11} & A_{12}\\ A_{21} & A_{22}
+\end{bmatrix}=\begin{bmatrix}
+L_{11} & 0\\ L_{21} & L_{22}
+\end{bmatrix}\begin{bmatrix}
+U_{11} & U_{12}\\0 & U_{22}
+\end{bmatrix} \]
+We then note the following relations,
+\begin{align*}
+A_{11} &=L_{11}U_{11}\\
+A_{12} &=L_{11}U_{12}\\
+A_{21} &=L_{21}U_{11}\\
+A_{22} &=L_{21}U_{12}+L_{22}U_{22}
+\end{align*}
+Here, since we have reduced $A_{21}$ to zero, we may note that $L_{21}U_{11}=0$, and that $L_{22}=I$ because of the reduction.  We then consider,
+\[A_{22}=L_{21}U_{12}+L_{22}U_{22}\]
+Rearranging, and substituting,
+\begin{align*}
+U_{22}&=A_{22}-(A_{21}U_{11}^{-1})(L_{11}^{-1}A_{12})\\
+&=A_{22}-A_{21}(L_{11}U_{11})^{-1}A_{12}\\
+&=A_{22}-A_{21}A_{11}^{-1}A_{12}\\
+\end{align*}
+As desired.
+\item Let,
+\[A=\begin{bmatrix}
+2 & 1 & 1 & 0\\ 4 & 3 & 3 & 1\\8 & 7 & 9 & 5\\6 & 7 & 9 & 8
+\end{bmatrix}\]
+And consider the $LU$ factorization given by,
+\[A=\begin{bmatrix}
+1 \\
+2 & 1 \\
+4 & 3 & 1 \\
+3 & 4 & 1 & 1
+\end{bmatrix}\begin{bmatrix}
+2 & 1 & 1 & 0\\
+& 1 & 1 & 1\\
+&&2 & 2\\
+&&& 2
+\end{bmatrix} \]
+We may then compute,
+\[Det(A)=\prod_{i=1}^nU_{ii}=2(1)(2)(2)=8\]
+We also are given,
+\[\begin{bmatrix}
+&&1\\&&&1\\&1\\1
+\end{bmatrix}A=\begin{bmatrix}
+1\\3/4 & 1\\1/2 & -2/7 & 1\\1/4 & -3/7 & 1/3 & 1
+\end{bmatrix}\begin{bmatrix}
+8 & 7 & 9 & 5\\
+& 7/4 & 9/4 & 17/4\\
+&&-6/7 & -2/7\\
+&&&2/3
+\end{bmatrix} \]
+Here, we see that $A$ is permuted, and as such, the determinant is also ``permuted". So, \[Det(PA)=Det(P)Det(A)=Det(P)Det(LU)=Det(P)Det(U)\]
+Then,
+\[Det(A)=Det(U)/Det(P)\]
+Computing,
+\[Det(P)=-1,\ Det(U)=\prod_{i=1}^4U_{ii}=8(7/4)(-6/7)(2/3)=-8\]
+Then,
+\[Det(A)=8\]
+We see that in this way, the determinant of the $U$ matrix will always be equal to the determinant of the original $A$ matrix to a factor of $(-1)$. With the permutation matrix on $A$, we can compute this factor easily.
+\item We consider the strictly column diagonally dominant matrix, i.e.,
+\[|a_{kk}| > \sum_{j\neq k}|a_{jk}|\]
+and we write $A$ as,
+\[A=\begin{bmatrix}
+a_{11} & A_{12}\\A_{21} & A_{22}
+\end{bmatrix}\]
+Here, $a_{11}$ is the first diagonal entry of the matrix, and the first column of this form of $A$ is the first column of $A$ itself. We then perform the first step of the elimination to arrive at,
+\[\begin{bmatrix}
+a_{11} & A_{12}\\0 & A_{22}-\frac{A_{21}}{a_{11}}A_{12}
+\end{bmatrix} \]
+By construction, we now must prove that $A_{22}-\frac{A_{21}}{a_{11}}A_{12}$ is also diagonally dominant. So,
+\[\sum_{j\neq k}\left|A_{22}-\frac{A_{21}}{a_{11}}A_{12}\right|\leq \sum_{j\neq k}|(A_{22})_{jk}|+\frac{1}{|a_{11}|}\sum_{j\neq k}\left|(A_{21})_{j}(A_{12})_{k}\right|\]
+The latter part of this is due to the respective row and columnar shapes of $A_{21}$ and $A_{12}$. Because $A$ is diagonally dominant, 
+\[\sum_{j\neq k}|(A_{22})_{jk}| < |(A_{22})_{kk}|-|(A_{12})_k|\]
+the row reduced first column, and,
+\[\sum_{j\neq k}|(A_{21})_{j}| < |a_{11}|-|(A_{21})_k|\]
+So, 
+\begin{align*}
+\sum_{j\neq k}\left|A_{22}-\frac{A_{21}}{a_{11}}A_{12}\right|&<|(A_{22})_{kk}|-|(A_{12})_k|+\frac{|(A_{12})_k}{|a_{11}|}(|a_{11}|-|(A_{21})_k|)\\
+&< |(A_{22})_{kk}|-|(A_{12})_k|+|(A_{12})_k|-\frac{|(A_{12})_k||(A_{21})_k|}{|a_{11}|}\\
+&\leq \left|(A_{22})_{kk}-\frac{(A_{21})_k(A_{12})_k}{a_11}\right|\\
+&\leq \left|\left(A_{22}-\frac{A_{21}A_{12}}{a_{11}}\right)_{kk}\right|
+\end{align*}
+So, we have shown that the strict diagonal dominant condition for the $m-1\times m-1$ submatrix. We may then inductively perform this analysis for all remaining submatrices until the matrix has been reduced. As such, we see that there is never a need for partial pivoting in the reduction.
+\item Finally, we consider a nonsingular matrix $A$, where $A=QR$ and $A^*A=U^*U$ are QR and Cholesky factorizations respectively. Then, we consider,
+\[A^*A=R^*Q^*QR=R^*R\]
+Since $Q$ is a unitary matrix by construction. Then we consider $(A^*A)*=A^*A$. Next, we let $x\in \C$ and consider, $x^*(A^*A)x=(Ax)^*(Ax)=||Ax||_2^2\geq 0$. Thus, we see that $A$ is invertible and is positive definite. As such, we know that $A$ has a unique Cholesky factorization, thus $R=U$.
+\end{enumerate}
+\end{document}
